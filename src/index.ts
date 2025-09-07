@@ -6,33 +6,25 @@ import usersRouter from './routes/users'
 
 const app = express()
 app.use(express.json())
+const PORT = 3000
 
 app.use('/api', usersRouter)
 
-try {
-	const doc = buildOpenAPIDocument({
-		routers: [usersRouter],
-		schemaPaths: ['./schemas'],
-		config: {
-			servers: [{ url: `https://server.com/api` }],
-			info: {
-				version: '1.0.0',
-				title: 'My API',
-				description: `Welcome to the My API!`,
-			},
+const doc = buildOpenAPIDocument({
+	routers: [usersRouter],
+	schemaPaths: [],
+	config: {
+		info: {
+			version: '1.0.0',
+			title: 'API docs',
 		},
-		errors: {
-			401: 'Unauthorized',
-			403: 'Forbidden',
-		},
-		openApiVersion: '3.0.0',
-	})
-	app.get(`/openapi.json`, (req, res) => res.json(doc))
-	app.use(`/openapi`, swaggerUI.serve, swaggerUI.setup(doc))
-} catch (err) {
-	console.error(err)
-}
+	},
+	errors: {},
+	openApiVersion: '3.0.0',
+})
 
-app.listen(3000, () => {
-	console.log('Server running at http://localhost:3000')
+app.use('/docs', swaggerUI.serve, swaggerUI.setup(doc, {}))
+
+app.listen(PORT, () => {
+	console.log(`Server running at http://localhost:${PORT}`)
 })

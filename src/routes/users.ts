@@ -1,24 +1,22 @@
 import { Router } from 'express'
 import { openAPIRoute } from 'express-zod-openapi-autogen'
-import { UserSchema } from '../schemas/user'
+import z from 'zod'
 
 const router = Router()
 
 router.get(
-	'/users',
+	'/',
 	openAPIRoute(
 		{
 			tag: 'Users',
-			summary: 'List all users',
-			description: 'Returns a user just for testing',
-			response: UserSchema,
+			summary: 'Get all users',
+			query: z.object({
+				limit: z.coerce.number().int().min(1).max(100).optional(),
+				offset: z.coerce.number().int().min(0).optional(),
+			}),
 		},
 		async (req, res) => {
-			res.json({
-				id: '123',
-				email: 'a@test.com',
-				name: 'Alice',
-			})
+			res.json({ msg: 'hello' })
 		}
 	)
 )

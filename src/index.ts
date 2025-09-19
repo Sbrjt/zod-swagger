@@ -4,26 +4,29 @@ import swaggerUI from 'swagger-ui-express'
 
 import usersRouter from './routes/users'
 
-const app = express()
-app.use(express.json())
-const PORT = 3000
+console.clear()
 
-app.use('/api', usersRouter)
+const app = express()
+const PORT = 4001
+
+app.use(express.json())
+
+app.use('/', usersRouter)
 
 const doc = buildOpenAPIDocument({
 	routers: [usersRouter],
 	schemaPaths: [],
 	config: {
 		info: {
-			version: '1.0.0',
 			title: 'API docs',
+			version: '',
 		},
 	},
 	errors: {},
 	openApiVersion: '3.0.0',
 })
 
-app.use('/docs', swaggerUI.serve, swaggerUI.setup(doc, {}))
+app.use('/docs', swaggerUI.serve, swaggerUI.setup(doc))
 
 app.listen(PORT, () => {
 	console.log(`Server running at http://localhost:${PORT}`)
